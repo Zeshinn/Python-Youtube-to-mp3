@@ -3,19 +3,23 @@ import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout
 from PyQt5.QtGui import QFont, QIcon
 from PyQt5.QtCore import Qt
+import threading
 ydl_opts = {
         'format': 'mp3/bestaudio/best',
         'postprocessors': [{
             'key': 'FFmpegExtractAudio',
             'preferredcodec': 'mp3',
-        }]
+        }],
+        'ffmpeg_location': '.\\ffmpeg.exe'
     }
 
 
 class YouTubeMP3Converter(QWidget):
+    
     def __init__(self):
         super().__init__()
         self.init_ui()
+        self.t1 = threading.Thread()
 
     def init_ui(self):
         self.setWindowTitle("YouTube MP3 Converter")
@@ -77,7 +81,10 @@ class YouTubeMP3Converter(QWidget):
 
         self.setLayout(main_layout)
 
-    def on_download_clicked(self):
+    
+    def download_mp3(self):
+        if(self.link_input.text() == ""):
+            return
         URLS = [self.link_input.text()]
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             try:
@@ -90,6 +97,15 @@ class YouTubeMP3Converter(QWidget):
             except Exception:
                 self.link_input.setText("")
                 self.link_input.setPlaceholderText("Error!")
+    
+    def on_download_clicked(self):
+        if self.t1.is_alive():
+            self.link_input.setText("")
+            self.link_input.setPlaceholderText("Already Converting! Please Wait!")
+        else:
+            self.t1 = threading.Thread(target=self.download_mp3)
+            self.t1.start()    
+    
 
 
 if __name__ == "__main__":
