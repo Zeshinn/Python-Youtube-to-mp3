@@ -10,3 +10,7 @@ Step 2. Install the requirements with pip ```pip install -r requirements.txt```
 Step 3. Put the ```ffmpeg.exe``` from the link below into the same folder as main.py
 
 https://github.com/yt-dlp/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip
+
+
+ALTERNATIVELY,
+You could download the latest release and use it without buidling it yourself. ;)
